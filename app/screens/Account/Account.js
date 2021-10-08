@@ -4,8 +4,8 @@ import React, { useState, useEffect } from "react";
 import Loading from "../../components/Loading"
 import UserGuest from "./UserGuest";
 import UserLogged from "./UserLogged";
-
-import firebase from 'firebase'
+import firebase from "firebase/app";
+// import firebase from 'firebase'
 require('firebase/auth')
 
 
@@ -22,7 +22,7 @@ export default function Account (){
 
     if(login === null) return <Loading isVisible={true} text="Cargando..."/>;
     
-    return (login === null)  ? <UserLogged/> : <UserGuest/>
+    return login  ? <UserLogged/> : <UserGuest/>
 
     // return (
     //     <View>

@@ -3,25 +3,38 @@ import { StyleSheet, View, Text } from "react-native";
 import { Input, Icon , Button} from "react-native-elements";
 import { validateEmail} from "../../utils/validations";
 import { size, isEmpty } from "lodash";
+import firebase from "firebase/app";
+import { useNavigation } from "@react-navigation/native";
 
-export default function RegisterForm() {
+export default function RegisterForm(props) {
+    const { toastRef } =props;
     const [showPassword, setShowPassword] = useState(false);
     const [showRepeatPassword, setShowRepeatPassword] = useState(false)
     const [formData, setFormData] = useState(defaultFormValue())
+    const navigation = useNavigation();
     const onSubmit = () => {
         // console.log(size(formData.password))
         if(isEmpty(formData.email)|| isEmpty(formData.password) || isEmpty(formData.repeatPassword)){
-            console.log("Todos los campos son obligatorios");
+            // console.log("Todos los campos son obligatorios");
+            toastRef.current.show("Todos los campos son obligatorios")
         } else if(!validateEmail(formData.email)) {
-            console.log("El email no es correcto");
+            toastRef.current.show("El email no es correcto")
+     
         } else if(formData.password !== formData.repeatPassword) {
-            console.log("Las contraseñas tiene que ser iguales")
+            toastRef.current.show("Las contraseñas tiene que ser iguales")
+      
         } else if(size(formData.password )< 6){
-            console.log()
-            console.log("la contraseña tiene que tener al menos 6 caracteres");
+           
+            toastRef.current.show("la contraseña tiene que tener al menos 6 caracteres");
         }
          else {
-            console.log("ok");
+            firebase.auth().createUserWithEmailAndPassword(formData.email,formData.password)
+            .then(response =>{
+                navigation.navigate("account");
+            })
+            .catch(err =>{
+                toastRef.current.show("El email ya esta en uso, pruebe con otro");
+            })
         }
         
     };
