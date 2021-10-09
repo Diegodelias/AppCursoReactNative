@@ -5,12 +5,14 @@ import { validateEmail} from "../../utils/validations";
 import { size, isEmpty } from "lodash";
 import firebase from "firebase/app";
 import { useNavigation } from "@react-navigation/native";
+import Loading from "../Loading";
 
 export default function RegisterForm(props) {
     const { toastRef } =props;
     const [showPassword, setShowPassword] = useState(false);
     const [showRepeatPassword, setShowRepeatPassword] = useState(false)
     const [formData, setFormData] = useState(defaultFormValue())
+    const [loading, setLoading] = useState(false)
     const navigation = useNavigation();
     const onSubmit = () => {
         // console.log(size(formData.password))
@@ -28,11 +30,14 @@ export default function RegisterForm(props) {
             toastRef.current.show("la contraseña tiene que tener al menos 6 caracteres");
         }
          else {
+            setLoading(true)
             firebase.auth().createUserWithEmailAndPassword(formData.email,formData.password)
             .then(response =>{
+                setLoading(false)
                 navigation.navigate("account");
             })
             .catch(err =>{
+                setLoading(false)
                 toastRef.current.show("El email ya esta en uso, pruebe con otro");
             })
         }
@@ -87,6 +92,7 @@ export default function RegisterForm(props) {
 
             <Button title="Unirse" containerStyle={styles.btnContainerRegister}
             buttonStyle={styles.btnRegister} onPress={onSubmit}/>
+            <Loading isVisible={loading} text="creando cuenta" />
         </View>
     )
 
@@ -107,10 +113,11 @@ const styles = StyleSheet.create({
         alignItems:"center",
         justifyContent: "center",
         marginTop: 30,
+    
 
     },
     inputForm:{
-        width: "100%",
+        width: 200,
         marginTop: 20,
     },
 
