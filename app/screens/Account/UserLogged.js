@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef }  from "react";
 import {StyleSheet, View, Text } from "react-native";
 import { Button } from "react-native-elements";
-import Toast from "react-native-easy-toast";
+import Toast, {DURATION} from 'react-native-easy-toast';
 import firebase from "firebase/app";
 import Loading from "../../components/Loading";
 import InfoUser from "../../components/Account/InfoUser";
@@ -12,7 +12,7 @@ export default function UserLogged(){
     const [loading, setLoading] = useState(false);
     const [loadingText, setLoadingText] = useState("");
     const toastRef = useRef();
-
+    
     useEffect(()=>{
         (async () =>{
             const user = await firebase.auth().currentUser;
@@ -25,7 +25,12 @@ export default function UserLogged(){
     return (
         
         <View style={styles.viewUserInfo}>
-            {userInfo && <InfoUser userInfo={userInfo} toastRef={toastRef} />}
+         
+            {userInfo && <InfoUser 
+            userInfo={userInfo} 
+            toastRef={toastRef }
+            setLoading= {setLoading} 
+            setLoadingText={setLoadingText}/>}
            
             <Text>AccountOptions</Text>
             <Button title="Cerrar sesión"

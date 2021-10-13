@@ -7,7 +7,7 @@ import RegisterForm  from "../../components/Account/RegisterForm"
 export default function Register(props) {
     console.log(props);
   const toastRef = useRef();
-    
+  
     return (
         <KeyboardAwareScrollView>
             <Image source={require("../../../assets/img/5-tenedores-letras-icono-logo.png")}

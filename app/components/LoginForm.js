@@ -8,6 +8,7 @@ import { useNavigation} from "@react-navigation/native";
 import Loading from "../components/Loading";
 
 export default function LoginForm(props) {
+
     const navigation = useNavigation()
     const { toastRef } = props;
     const [showPassword, setShowPassword] = useState(false);
@@ -18,6 +19,7 @@ export default function LoginForm(props) {
     }
     const onSubmit = () => {
         if(isEmpty(formData.email) || isEmpty(formData.password)) {
+          
             toastRef.current.show("Todos los campos son obligatorios");
             
             console.log(formData.email)
