@@ -29,7 +29,7 @@ export default function InfoUser(props){
           
             // console.log(resultPermission)
             // const resultPermissionCamera = resultPermission.permissions.cameraRoll.status;
-            if(resultPermissionCamera !== "granted"){
+            if(resultPermission.granted === 'granted'){
             
                 toastRef.current.show("Es necesario acpetar los permisos de la galeria ")
             }
