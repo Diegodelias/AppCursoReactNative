@@ -1,11 +1,16 @@
 import React , { useState } from "react";
 import {StyleSheet, View } from "react-native";
 import { Input, Button} from "react-native-elements";
+import firebase from "firebase/app";
+import { setStatusBarTranslucent } from "expo-status-bar";
+// import firebase from 'firebase'
+require('firebase/auth');
 
 export default function ChangeDisplayNameForm(props){
-    const {displayName, setShowModal, toastRef} = props;
+    const {displayName, setShowModal, toastRef ,setReloadUserInfo} = props;
     const [newDisplayName, setNewDisplayName] = useState(null);
     const [error,setError] = useState(null);
+    const [isLoading, setIsLoading] = useState(false)
 
     const onSubmit = ()=>{
 
@@ -15,7 +20,24 @@ export default function ChangeDisplayNameForm(props){
         } else if(displayName === newDisplayName){
             setError("El nombre no puede ser igual al actual.");
         } else {
-            console.log("Ok...");
+
+            setIsLoading(true)
+            const update ={
+                displayName : newDisplayName
+            }
+            firebase.auth()
+            .currentUser.updateProfile(update)
+            .then(()=>{
+                setIsLoading(false)
+                setReloadUserInfo(true)
+                setShowModal(false)
+               
+                
+            })
+            .catch(()=>{
+                setError("Error al actualizar el nombre.")
+                setIsLoading(false)
+            });
         }
         
     }
@@ -33,12 +55,29 @@ export default function ChangeDisplayNameForm(props){
             onChange={ (e) => setNewDisplayName(e.nativeEvent.text)}
             errorMessage={error}
             />
-            <Button
-            title="Cambiar nombre"
-            containerStyle={styles.btnContainer}
-            buttonStyle = {styles.btn}
-            onPress={onSubmit}
-            />
+
+                  
+
+            {isLoading  ? (
+                       <Button
+                       title="Cambiar nombre "
+                       containerStyle={styles.btnContainer}
+                       buttonStyle = {styles.btn}
+                       onPress={onSubmit}
+                       loading
+                       />
+
+
+
+              ): ( <Button
+                title="Cambiar nombre "
+                containerStyle={styles.btnContainer}
+                buttonStyle = {styles.btn}
+                onPress={onSubmit}
+                
+                />)   }
+
+         
 
         </View>
     )

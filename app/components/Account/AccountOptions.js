@@ -1,14 +1,16 @@
 
 
 import React , { useState } from 'react';
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { ListItem, Icon } from 'react-native-elements';
 import { map } from "lodash";
 import Modal from "./Modal";
 import ChangeDisplayNameForm from "./ChangeDisplayNameForm";
+import ChangeEmailForm from "./ChangeEmailForm";
+import ChangePasswordForm from "./ChangePasswordForm";
 
 export default function AccountOptions(props) {
-    const { userInfo, toastRef } = props;
+    const { userInfo, toastRef,  setReloadUserInfo } = props;
     const  [ showModal, setShowModal] = useState(false);
     const [renderComponent, setRenderComponent] = useState(null);
    
@@ -18,17 +20,30 @@ export default function AccountOptions(props) {
       switch(key){
           case "displayName":
             setRenderComponent(
-                <ChangeDisplayNameForm displayName={userInfo.displayName} setShowModal={setShowModal} toastRef={toastRef}/>) ;
+                <ChangeDisplayNameForm displayName={userInfo.displayName} setShowModal={setShowModal} toastRef={toastRef}
+                setReloadUserInfo={setReloadUserInfo}
+                />) ;
                 setShowModal(true);
             
             break;
             case "email":
-                setRenderComponent(<Text>Cambiando Email</Text>);
+                setRenderComponent(
+                    <ChangeEmailForm email={userInfo.email} setShowModal={setShowModal} toastRef={toastRef}
+                    setReloadUserInfo={setReloadUserInfo}/>
+
+
+
+                    
+                );
                 setShowModal(true)
                 break;
 
             case "password":
-                setRenderComponent(<Text>Cambiando contraseña</Text>);
+                setRenderComponent(
+                    <ChangePasswordForm setShowModal={setShowModal}
+                    toastRef={toastRef}
+                    />
+                );
                 setShowModal(true);
                 break;
 
